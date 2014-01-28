@@ -41,21 +41,39 @@ Requires:	%{name}-devel = %{version}-%{release}
 This package contains static dbus-c++ library.
 
 %package glib
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
 %description glib
 
 %package glib-devel
+Group:		Development/Libraries
+Requires:	%{name}-glib = %{version}-%{release}
+
 %description glib
 
 %package glib-static
+Group:		Development/Libraries
+Requires:	%{name}-glib-devel = %{version}-%{release}
+
 %description glib
 
 %package ecore
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
 %description ecore
 
 %package ecore-devel
+Group:		Development/Libraries
+Requires:	%{name}-ecore = %{version}-%{release}
+
 %description ecore-devel
 
 %package ecore-static
+Group:		Development/Libraries
+Requires:	%{name}-ecore-devel = %{version}-%{release}
+
 %description ecore-static
 
 %prep
@@ -93,15 +111,39 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING AUTHORS
 %attr(755,root,root) %{_bindir}/dbusxx-introspect
 %attr(755,root,root) %{_bindir}/dbusxx-xml2cpp
-%{_libdir}/*.so.*
+%attr(755,root,root) %{_libdir}/libdbus-c++-1.so.*.*.*
 
 %files devel
 %defattr(644,root,root,755)
 %doc TODO
 %{_includedir}/*
-%{_libdir}/*.so
+%attr(755,root,root) %{_libdir}/libdbus-c++-1.so
 %{_pkgconfigdir}/*
 
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libdbus-c++-1.a
+
+%files glib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libdbus-c++-glib-1.so.*.*.*
+
+%files glib-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libdbus-c++-glib-1.so
+
+%files glib-static
+%defattr(644,root,root,755)
+%{_libdir}/libdbus-c++-glib-1.a
+
+%files ecore
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libdbus-c++-ecore-1.so.*.*.*
+
+%files ecore-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libdbus-c++-ecore-1.so
+
+%files ecore-static
+%defattr(644,root,root,755)
+%{_libdir}/libdbus-c++-ecore-1.a
