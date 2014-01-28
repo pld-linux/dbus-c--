@@ -5,6 +5,7 @@ Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://downloads.sourceforge.net/dbus-cplusplus/lib%{name}-%{version}.tar.gz
+# Source0-md5:	e752116f523fa88ef041e63d3dee4de2
 URL:		http://sourceforge.net/projects/dbus-cplusplus/
 Patch1:		%{name}-gcc4.7.patch
 Patch2:		%{name}-linkfix.patch
