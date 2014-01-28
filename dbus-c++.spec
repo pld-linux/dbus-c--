@@ -40,6 +40,24 @@ Requires:	%{name}-devel = %{version}-%{release}
 %description static
 This package contains static dbus-c++ library.
 
+%package glib
+%description glib
+
+%package glib-devel
+%description glib
+
+%package glib-static
+%description glib
+
+%package ecore
+%description ecore
+
+%package ecore-devel
+%description ecore-devel
+
+%package ecore-static
+%description ecore-static
+
 %prep
 %setup -q -n lib%{name}-%{version}
 %{__sed} -i 's/\r//' AUTHORS
