@@ -4,35 +4,35 @@ Version:	0.9.0
 Release:	0.1
 License:	LGPL v2+
 Group:		Libraries
-URL:		http://sourceforge.net/projects/dbus-cplusplus/
 Source0:	http://downloads.sourceforge.net/dbus-cplusplus/lib%{name}-%{version}.tar.gz
+URL:		http://sourceforge.net/projects/dbus-cplusplus/
 Patch1:		%{name}-gcc4.7.patch
 Patch2:		%{name}-linkfix.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	libtool
 BuildRequires:	dbus-devel
 BuildRequires:	ecore-devel
 BuildRequires:	expat-devel
 BuildRequires:	glib2-devel
 BuildRequires:	gtkmm-devel
+BuildRequires:	libtool
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 dbus-c++ attempts to provide a C++ API for D-Bus. The library has a
 glib/gtk and an Ecore mainloop integration.
 
-%package        devel
+%package devel
 Summary:	Development files for %{name}
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	pkgconfig
 
-%description    devel
+%description devel
 This package contains libraries and header files for developing
 applications that use %{name}.
 
-%package        static
+%package static
 Summary:	Static dbus-c++ library
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
@@ -103,8 +103,8 @@ rm -rf $RPM_BUILD_ROOT
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
