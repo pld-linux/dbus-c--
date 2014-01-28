@@ -32,6 +32,14 @@ Requires:	pkgconfig
 This package contains libraries and header files for developing
 applications that use %{name}.
 
+%package        static
+Summary:	Static dbus-c++ library
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description static
+This package contains static dbus-c++ library.
+
 %prep
 %setup -q -n lib%{name}-%{version}
 %{__sed} -i 's/\r//' AUTHORS
@@ -75,3 +83,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 %{_libdir}/*.so
 %{_pkgconfigdir}/*
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libdbus-c++-1.a
