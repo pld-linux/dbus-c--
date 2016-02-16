@@ -6,11 +6,12 @@ Summary:	Native C++ bindings for D-Bus
 Summary(pl.UTF-8):	Natywne wiązania C++ do usługi D-Bus
 Name:		dbus-c++
 Version:	0.9.0
-Release:	3
+Release:	4
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://downloads.sourceforge.net/dbus-cplusplus/lib%{name}-%{version}.tar.gz
 # Source0-md5:	e752116f523fa88ef041e63d3dee4de2
+Patch0:		%{name}-macros.patch
 Patch1:		%{name}-gcc4.7.patch
 Patch2:		%{name}-linkfix.patch
 URL:		http://sourceforge.net/projects/dbus-cplusplus/
@@ -22,7 +23,7 @@ BuildRequires:	doxygen
 BuildRequires:	expat-devel >= 1.95
 BuildRequires:	glib2-devel >= 2.0
 BuildRequires:	gtkmm-devel >= 2.4
-BuildRequires:	libstdc++-devel
+BuildRequires:	libstdc++-devel >= 6:4.3
 BuildRequires:	libtool >= 2:1.5
 BuildRequires:	pkgconfig
 Requires:	dbus-libs >= 1.0.0
@@ -140,6 +141,7 @@ Statyczna biblioteka dbus-c++-ecore.
 
 %prep
 %setup -q -n lib%{name}-%{version}
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 
@@ -149,6 +151,7 @@ Statyczna biblioteka dbus-c++-ecore.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
+CXXFLAGS="%{rpmcxxflags} -std=c++0x"
 %configure \
 	%{!?with_ecore:--disable-ecore}
 

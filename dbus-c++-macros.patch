@@ -1,0 +1,128 @@
+--- libdbus-c++-0.9.0/include/dbus-c++/interface.h.orig	2011-11-28 16:03:19.000000000 +0100
++++ libdbus-c++-0.9.0/include/dbus-c++/interface.h	2016-02-16 21:11:10.523884413 +0100
+@@ -177,17 +177,17 @@
+   SignalTable	_signals;
+ };
+ 
+-# define register_method(interface, method, callback) \
++# define DBus_register_method(interface, method, callback) \
+ 	InterfaceAdaptor::_methods[ #method ] = \
+ 		new ::DBus::Callback< interface, ::DBus::Message, const ::DBus::CallMessage &>(this, & interface :: callback);
+ 
+-# define bind_property(variable, type, can_read, can_write) \
++# define DBus_bind_property(variable, type, can_read, can_write) \
+ 	InterfaceAdaptor::_properties[ #variable ].read = can_read; \
+ 	InterfaceAdaptor::_properties[ #variable ].write = can_write; \
+ 	InterfaceAdaptor::_properties[ #variable ].sig = type; \
+ 	variable.bind(InterfaceAdaptor::_properties[ #variable ]);
+ 
+-# define connect_signal(interface, signal, callback) \
++# define DBus_connect_signal(interface, signal, callback) \
+ 	InterfaceProxy::_signals[ #signal ] = \
+ 		new ::DBus::Callback< interface, void, const ::DBus::SignalMessage &>(this, & interface :: callback);
+ 
+--- libdbus-c++-0.9.0/examples/hal/hal-listen.cpp.orig	2011-11-28 16:03:19.000000000 +0100
++++ libdbus-c++-0.9.0/examples/hal/hal-listen.cpp	2016-02-16 21:23:04.877690640 +0100
+@@ -11,8 +11,8 @@ HalManagerProxy::HalManagerProxy(DBus::C
+   : DBus::InterfaceProxy("org.freedesktop.Hal.Manager"),
+     DBus::ObjectProxy(connection, "/org/freedesktop/Hal/Manager", "org.freedesktop.Hal")
+ {
+-  connect_signal(HalManagerProxy, DeviceAdded, DeviceAddedCb);
+-  connect_signal(HalManagerProxy, DeviceRemoved, DeviceRemovedCb);
++  DBus_connect_signal(HalManagerProxy, DeviceAdded, DeviceAddedCb);
++  DBus_connect_signal(HalManagerProxy, DeviceRemoved, DeviceRemovedCb);
+ 
+   std::vector< std::string > devices = GetAllDevices();
+ 
+@@ -70,8 +70,8 @@ HalDeviceProxy::HalDeviceProxy(DBus::Con
+   : DBus::InterfaceProxy("org.freedesktop.Hal.Device"),
+     DBus::ObjectProxy(connection, udi, "org.freedesktop.Hal")
+ {
+-  connect_signal(HalDeviceProxy, PropertyModified, PropertyModifiedCb);
+-  connect_signal(HalDeviceProxy, Condition, ConditionCb);
++  DBus_connect_signal(HalDeviceProxy, PropertyModified, PropertyModifiedCb);
++  DBus_connect_signal(HalDeviceProxy, Condition, ConditionCb);
+ }
+ 
+ void HalDeviceProxy::PropertyModifiedCb(const DBus::SignalMessage &sig)
+--- libdbus-c++-0.9.0/src/introspection.cpp.orig	2011-11-28 16:03:19.000000000 +0100
++++ libdbus-c++-0.9.0/src/introspection.cpp	2016-02-16 21:12:54.849303200 +0100
+@@ -40,7 +40,7 @@ static const char *introspectable_name =
+ IntrospectableAdaptor::IntrospectableAdaptor()
+   : InterfaceAdaptor(introspectable_name)
+ {
+-  register_method(IntrospectableAdaptor, Introspect, Introspect);
++  DBus_register_method(IntrospectableAdaptor, Introspect, Introspect);
+ }
+ 
+ Message IntrospectableAdaptor::Introspect(const CallMessage &call)
+--- libdbus-c++-0.9.0/src/property.cpp.orig	2011-11-28 16:03:19.000000000 +0100
++++ libdbus-c++-0.9.0/src/property.cpp	2016-02-16 21:13:35.914769521 +0100
+@@ -37,8 +37,8 @@ static const char *properties_name = "or
+ PropertiesAdaptor::PropertiesAdaptor()
+   : InterfaceAdaptor(properties_name)
+ {
+-  register_method(PropertiesAdaptor, Get, Get);
+-  register_method(PropertiesAdaptor, Set, Set);
++  DBus_register_method(PropertiesAdaptor, Get, Get);
++  DBus_register_method(PropertiesAdaptor, Set, Set);
+ }
+ 
+ Message PropertiesAdaptor::Get(const CallMessage &call)
+--- libdbus-c++-0.9.0/test/functional/Test1/TestAppIntroPrivate.h.orig	2011-11-30 10:23:40.000000000 +0100
++++ libdbus-c++-0.9.0/test/functional/Test1/TestAppIntroPrivate.h	2016-02-16 21:24:30.505478325 +0100
+@@ -21,8 +21,8 @@ public:
+     Intro_proxy()
+     : ::DBus::InterfaceProxy("DBusCpp.Test.Com.Intro")
+     {
+-        connect_signal(Intro_proxy, test1Result, _test1Result_stub);
+-        connect_signal(Intro_proxy, testByteResult, _testByteResult_stub);
++        DBus_connect_signal(Intro_proxy, test1Result, _test1Result_stub);
++        DBus_connect_signal(Intro_proxy, testByteResult, _testByteResult_stub);
+     }
+ 
+ public:
+--- libdbus-c++-0.9.0/test/functional/Test1/TestAppIntroProviderPrivate.h.orig	2011-11-30 10:23:40.000000000 +0100
++++ libdbus-c++-0.9.0/test/functional/Test1/TestAppIntroProviderPrivate.h	2016-02-16 21:24:10.574441511 +0100
+@@ -21,8 +21,8 @@ public:
+     Intro_adaptor()
+     : ::DBus::InterfaceAdaptor("DBusCpp.Test.Com.Intro")
+     {
+-        register_method(Intro_adaptor, test1, _test1_stub);
+-        register_method(Intro_adaptor, testByte, _testByte_stub);
++        DBus_register_method(Intro_adaptor, test1, _test1_stub);
++        DBus_register_method(Intro_adaptor, testByte, _testByte_stub);
+     }
+ 
+     ::DBus::IntrospectedInterface *introspect() const 
+--- libdbus-c++-0.9.0/tools/generate_adaptor.cpp.orig	2011-11-28 16:03:19.000000000 +0100
++++ libdbus-c++-0.9.0/tools/generate_adaptor.cpp	2016-02-16 21:16:59.725362107 +0100
+@@ -119,7 +119,7 @@ void generate_adaptor(Xml::Document &doc
+     {
+       Xml::Node &property = **pi;
+ 
+-      body << tab << tab << "bind_property("
++      body << tab << tab << "DBus_bind_property("
+            << property.get("name") << ", "
+            << "\"" << property.get("type") << "\", "
+            << (property.get("access").find("read") != string::npos
+@@ -137,7 +137,7 @@ void generate_adaptor(Xml::Document &doc
+     {
+       Xml::Node &method = **mi;
+ 
+-      body << tab << tab << "register_method("
++      body << tab << tab << "DBus_register_method("
+            << ifaceclass << ", " << method.get("name") << ", " << stub_name(method.get("name"))
+            << ");" << endl;
+     }
+--- libdbus-c++-0.9.0/tools/generate_proxy.cpp.orig	2011-11-28 16:03:19.000000000 +0100
++++ libdbus-c++-0.9.0/tools/generate_proxy.cpp	2016-02-16 21:21:39.493248947 +0100
+@@ -121,7 +121,7 @@ void generate_proxy(Xml::Document &doc,
+ 
+       string marshname = "_" + signal.get("name") + "_stub";
+ 
+-      body << tab << tab << "connect_signal("
++      body << tab << tab << "DBus_connect_signal("
+            << ifaceclass << ", " << signal.get("name") << ", " << stub_name(signal.get("name"))
+            << ");" << endl;
+     }
