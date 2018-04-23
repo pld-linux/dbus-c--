@@ -1,0 +1,56 @@
+--- libdbus-c++-0.9.0/include/dbus-c++/dispatcher.h.orig	2011-11-28 16:03:19.000000000 +0100
++++ libdbus-c++-0.9.0/include/dbus-c++/dispatcher.h	2018-04-23 20:38:19.311394855 +0200
+@@ -29,6 +29,8 @@
+ #include "connection.h"
+ #include "eventloop.h"
+ 
++#define DBUSXX_DBUS_HAS_RECURSIVE_MUTEX /* assume dbus >= 0.95 */
++
+ namespace DBus
+ {
+ 
+@@ -227,14 +229,14 @@
+ };
+ 
+ typedef Mutex *(*MutexNewFn)();
+-typedef void (*MutexUnlockFn)(Mutex *mx);
++typedef void (*MutexFreeFn)(Mutex *mx);
+ 
+-#ifndef DBUS_HAS_RECURSIVE_MUTEX
+-typedef bool (*MutexFreeFn)(Mutex *mx);
++#ifndef DBUSXX_DBUS_HAS_RECURSIVE_MUTEX
+ typedef bool (*MutexLockFn)(Mutex *mx);
++typedef bool (*MutexUnlockFn)(Mutex *mx);
+ #else
+-typedef void (*MutexFreeFn)(Mutex *mx);
+ typedef void (*MutexLockFn)(Mutex *mx);
++typedef void (*MutexUnlockFn)(Mutex *mx);
+ #endif//DBUS_HAS_RECURSIVE_MUTEX
+ 
+ typedef CondVar *(*CondVarNewFn)();
+@@ -272,6 +274,17 @@
+     delete mx;
+   }
+ 
++#ifndef DBUSXX_DBUS_HAS_RECURSIVE_MUTEX
++  static bool mutex_lock(Mutex *mx)
++  {
++    return mx->lock();
++  }
++
++  static bool mutex_unlock(Mutex *mx)
++  {
++    return mx->unlock();
++  }
++#else
+   static void mutex_lock(Mutex *mx)
+   {
+     mx->lock();
+@@ -281,6 +294,7 @@
+   {
+     mx->unlock();
+   }
++#endif
+ 
+   static CondVar *condvar_new()
+   {
