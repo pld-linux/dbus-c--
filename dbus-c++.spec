@@ -15,6 +15,7 @@ Patch0:		%{name}-macros.patch
 Patch1:		%{name}-gcc4.7.patch
 Patch2:		%{name}-linkfix.patch
 Patch3:		%{name}-threading.patch
+Patch4:		%{name}-write.patch
 URL:		http://sourceforge.net/projects/dbus-cplusplus/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
@@ -146,6 +147,7 @@ Statyczna biblioteka dbus-c++-ecore.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %{__libtoolize}
