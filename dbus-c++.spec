@@ -1,12 +1,12 @@
 #
 # Conditional build:
-%bcond_without	ecore	# Ecore mainloop integration
+%bcond_with	ecore	# Ecore mainloop integration
 #
 Summary:	Native C++ bindings for D-Bus
 Summary(pl.UTF-8):	Natywne wiązania C++ do usługi D-Bus
 Name:		dbus-c++
 Version:	0.9.0
-Release:	5
+Release:	6
 License:	LGPL v2.1+
 Group:		Libraries
 Source0:	http://downloads.sourceforge.net/dbus-cplusplus/lib%{name}-%{version}.tar.gz
